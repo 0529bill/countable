@@ -1,0 +1,9 @@
+@import '~bootstrap/scss/bootstrap';
+
+.App {
+  background-color: gainsboro;
+  &__title {
+    font-family: 'Pacifico', cursive;
+    color: white;
+  }
+}

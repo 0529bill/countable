@@ -1,0 +1,11 @@
+.Count {
+  background-color: gainsboro;
+  &__title {
+    font-family: 'Arima Madurai', cursive;
+    padding-top: 20%;
+    color: grey;
+  }
+  &__sign {
+    color: grey;
+  }
+}

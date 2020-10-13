@@ -1,0 +1,14 @@
+.Count {
+  background-color: gainsboro;
+}
+
+.Count__title {
+  font-family: 'Arima Madurai', cursive;
+  padding-top: 20%;
+  color: grey;
+}
+
+.Count__sign {
+  color: grey;
+}
+/*# sourceMappingURL=Count.css.map */
