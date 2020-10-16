@@ -179,14 +179,6 @@ class MenuCount extends Component {
       </Card>
     );
   }
-  renderDropDown = () => {
-    return (
-      <DropdownButton className="m-3" variant="info" title="Sort">
-        <Dropdown.Item>Sorting accoring user</Dropdown.Item>
-        <Dropdown.Item>Sorting according rating</Dropdown.Item>
-      </DropdownButton>
-    );
-  };
 
   renderButton() {
     if (this.props.isSignedIn)
@@ -213,7 +205,7 @@ class MenuCount extends Component {
               backgroundColor: 'gainsboro',
             }}
           >
-            {this.renderDropDown()}
+            {/* {this.renderDropDown()} */}
             {this.renderUserInfo()}
             {this.renderList()}
             {this.renderButton()}
