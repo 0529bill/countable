@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Container, Button, Col, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { signed_In, signed_Out } from '../actions/action';
+import { signed_In, signed_Out, reloading } from '../actions/action';
 import history from '../history';
 import { Link, Router } from 'react-router-dom';
 import './App.scss';
@@ -34,7 +34,7 @@ class App extends Component {
           this.id = this.auth.currentUser.get().getBasicProfile().getId();
 
           this.onAuthChange(this.auth.isSignedIn.get());
-          console.log(this.auth.isSignedIn.get());
+
           this.auth.isSignedIn.listen(this.onAuthChange);
         });
     });
@@ -48,16 +48,24 @@ class App extends Component {
     }
   };
 
+  handlesignOut = () => {
+    this.auth.signOut();
+  };
+
+  handlesignIn = () => {
+    this.auth.signIn();
+  };
+
   renderButton() {
     if (this.props.isSignedIn) {
       return (
-        <Button variant="danger" size="md" onClick={() => this.auth.signOut()}>
+        <Button variant="danger" size="md" onClick={this.handlesignOut}>
           Signed Out
         </Button>
       );
     } else {
       return (
-        <Button variant="primary" size="md" onClick={() => this.auth.signIn()}>
+        <Button variant="primary" size="md" onClick={this.handlesignIn}>
           Sign in with Google
         </Button>
       );
@@ -68,19 +76,21 @@ class App extends Component {
     return (
       <Router history={history}>
         {/* nav starts */}
-        <Container fluid className="App ">
-          <Row>
-            <Col className="App__title mt-3 ">
-              <Link to="/countable" className="text-decoration-none">
-                <h3>Countable</h3>
-              </Link>
-            </Col>
-            <Col className="mt-3 text-right text-decoration-none">
-              {/* <Link to="/countable">{this.renderButton()}</Link> */}
-              {this.renderButton()}
-            </Col>
-          </Row>
-        </Container>
+        <div style={{}}>
+          <Container fluid className="App">
+            <Row>
+              <Col className="App__title mt-3 ">
+                <Link to="/countable" className="text-decoration-none">
+                  <h3>Countable</h3>
+                </Link>
+              </Col>
+              <Col className="mt-3 text-right text-decoration-none">
+                {/* <Link to="/countable">{this.renderButton()}</Link> */}
+                {this.renderButton()}
+              </Col>
+            </Row>
+          </Container>
+        </div>
 
         {/* nav ends  */}
         <Switch>
@@ -103,4 +113,6 @@ const mapStateToProps = (state) => {
   return { isSignedIn: state.reducers.isSignedIn };
 };
 
-export default connect(mapStateToProps, { signed_In, signed_Out })(App);
+export default connect(mapStateToProps, { signed_In, signed_Out, reloading })(
+  App
+);

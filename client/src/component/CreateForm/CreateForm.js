@@ -18,15 +18,12 @@ class CreateForm extends Component {
     const fullName =
       event.target.firstName.value + ' ' + event.target.lastName.value;
 
-    console.log(fullName);
     let genders = event.target.gender.value;
-    console.log(genders);
 
     let rates = event.target.ratings.value;
-    console.log(rates);
 
     let feedback = event.target.feedbacks.value;
-    console.log(feedback);
+
     let arr = { fullName, genders, rates, feedback };
     this.props.create_count(arr);
   };
@@ -71,9 +68,9 @@ class CreateForm extends Component {
           </Form.Group>
           <Form.Group>
             <Form.Label>Rate this relationship</Form.Label>
-            <div>(10 as best in my life, 1 as a total disaster)</div>
+            <div>(10 as best in my life, 0 as a total disaster)</div>
             <Form.Control id="ratings" as="select">
-              <option>Choose...</option>
+              <option>0</option>
               <option>1</option>
               <option>2</option>
               <option>3</option>

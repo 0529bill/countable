@@ -13,22 +13,27 @@ export default (state = {}, action) => {
     case CREATE_COUNT:
       return {
         ...state,
-        // ...action.payload,
-        [action.payload.userId]: action.payload,
+
+        [action.payload.uuid]: action.payload,
       };
     case DELETE_COUNT:
-      return {};
+      delete state[action.payload];
+      // return state.filter((instances) => instances.uuid !== action.payload);
+      return state;
+
     case EDIT_COUNT:
-      return {};
+      return {
+        ...state,
+        [action.payload.uuid]: action.payload,
+      };
     case FETCH_COUNT:
       return {
         ...state,
-        [action.payload.userId]: action.payload,
+        [action.payload.uuid]: action.payload,
       };
     case FETCH_COUNTS:
       return {
-        ...state,
-        ..._.mapKeys(action.payload, 'id'),
+        ..._.mapKeys(action.payload, 'uuid'),
       };
 
     default:

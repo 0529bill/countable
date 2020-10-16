@@ -3,6 +3,7 @@ import { SIGNED_IN, SIGNED_OUT } from '../actions/actionTypes';
 const initialState = {
   isSignedIn: null,
   userInfo: null,
+  reload: false,
 };
 
 export default (state = initialState, action) => {
@@ -11,8 +12,12 @@ export default (state = initialState, action) => {
       return { ...state, isSignedIn: true, userInfo: action.payload }; //important parts!
     case SIGNED_OUT:
       return { ...state, isSignedIn: false, userId: null };
+    case 'RELOADING':
+      return { reload: !action.payload };
     default:
-      // return { ...state, isSignedIn: true, userInfo: action.payload };
-      return initialState;
+      console.log('something went wrong', action);
+
+      return state;
+    // need to return state instead of initialState
   }
 };

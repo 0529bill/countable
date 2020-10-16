@@ -8,6 +8,7 @@ import {
   FETCH_COUNT,
 } from './actionTypes.js';
 import history from '../history';
+import { v4 as uuidv4 } from 'uuid';
 
 import axios from 'axios';
 
@@ -18,7 +19,8 @@ let instance = axios.create({
 export const create_count = (arr) => {
   return async (dispatch, getState) => {
     let userId = getState().reducers.userInfo.userId;
-    let response = await instance.post('/data/', { ...arr, userId });
+    let uuid = uuidv4();
+    let response = await instance.post('/data/', { ...arr, userId, uuid });
     dispatch({
       type: CREATE_COUNT,
       payload: response.data,
@@ -29,11 +31,11 @@ export const create_count = (arr) => {
 
 export const fetch_count = (userId) => {
   return async (dispatch) => {
-    let response = await instance.get('/data/');
-    let data = response.data.filter((arr) => arr.userId == userId);
+    let response = await instance.get(`data/${userId}`);
+
     dispatch({
       type: FETCH_COUNT,
-      payload: data,
+      payload: response.data,
     });
   };
 };
@@ -48,18 +50,32 @@ export const fetch_counts = () => {
   };
 };
 
-export const delete_count = (store) => {
-  return {
-    type: DELETE_COUNT,
-    payload: store,
+export const delete_count = (uuid) => {
+  return async (dispatch) => {
+    await instance.delete(`/data/${uuid}`);
+    dispatch({
+      type: DELETE_COUNT,
+      payload: uuid,
+    });
+    // history.push('/countable');
   };
 };
-export const edit_count = (store) => {
-  return {
-    type: EDIT_COUNT,
-    payload: store,
+export const edit_count = (uuid, arr) => {
+  return async (dispatch, getState) => {
+    let userId = getState().reducers.userInfo.userId;
+    let response = await instance.put(`data/${uuid}`, {
+      ...arr,
+      userId,
+      uuid,
+    });
+    dispatch({
+      type: EDIT_COUNT,
+      payload: response.data,
+    });
+    history.push('/countable');
   };
 };
+
 export const signed_In = (userId, userName) => {
   return {
     type: SIGNED_IN,
@@ -73,5 +89,12 @@ export const signed_In = (userId, userName) => {
 export const signed_Out = () => {
   return {
     type: SIGNED_OUT,
+  };
+};
+
+export const reloading = (value) => {
+  return {
+    type: 'RELOADING',
+    payload: value,
   };
 };

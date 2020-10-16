@@ -2,26 +2,26 @@ import React, { Component } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
 import { connect } from 'react-redux';
-// import { Link } from 'react-router-dom';
-import { create_count } from '../../actions/action';
+
+import { edit_count, fetch_count } from '../../actions/action';
 
 class EditCount extends Component {
+  componentDidMount() {
+    let { id } = this.props.match.params;
+    this.props.fetch_count(id);
+  }
   handleSubmit = (event) => {
     event.preventDefault();
+
+    let { id } = this.props.match.params;
+
     const fullName =
       event.target.firstName.value + ' ' + event.target.lastName.value;
-
-    console.log(fullName);
     let genders = event.target.gender.value;
-    console.log(genders);
-
     let rates = event.target.ratings.value;
-    console.log(rates);
-
     let feedback = event.target.feedbacks.value;
-    console.log(feedback);
     let arr = { fullName, genders, rates, feedback };
-    this.props.create_count(arr);
+    this.props.edit_count(id, arr);
   };
   render() {
     return (
@@ -40,6 +40,11 @@ class EditCount extends Component {
                   required
                   type="text"
                   id="firstName"
+                  defaultValue={
+                    this.props.targetInfo
+                      ? this.props.targetInfo.fullName.trim().split(' ')[0]
+                      : null
+                  }
                 />
               </Col>
               <Col>
@@ -48,6 +53,14 @@ class EditCount extends Component {
                   placeholder="Last name"
                   type="text"
                   id="lastName"
+                  defaultValue={
+                    this.props.targetInfo
+                      ? this.props.targetInfo.fullName
+                          .trim()
+                          .split(' ')
+                          .slice(-1)[0]
+                      : null
+                  }
                 />
               </Col>
             </Row>
@@ -59,7 +72,14 @@ class EditCount extends Component {
 
           <Form.Group>
             <Form.Label>Ex's gender</Form.Label>
-            <Form.Control required as="select" id="gender">
+            <Form.Control
+              required
+              as="select"
+              id="gender"
+              defaultValue={
+                this.props.targetInfo ? this.props.targetInfo.genders : null
+              }
+            >
               <option>Choose...</option>
               <option>male</option>
               <option>female</option>
@@ -68,8 +88,14 @@ class EditCount extends Component {
           <Form.Group>
             <Form.Label>Rate this relationship</Form.Label>
             <div>(10 as best in my life, 1 as a total disaster)</div>
-            <Form.Control id="ratings" as="select">
-              <option>Choose...</option>
+            <Form.Control
+              id="ratings"
+              as="select"
+              defaultValue={
+                this.props.targetInfo ? this.props.targetInfo.rates : null
+              }
+            >
+              <option>0</option>
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -89,17 +115,33 @@ class EditCount extends Component {
               id="feedbacks"
               type="textarea"
               placeholder="write any comments.."
+              defaultValue={
+                this.props.targetInfo ? this.props.targetInfo.feedback : null
+              }
             />
           </Form.Group>
-          {/* <Link to="/"> */}
           <Button variant="primary mt-3" type="submit">
             Submit
           </Button>
-          {/* </Link> */}
         </Form>
       </Container>
     );
   }
 }
+const mapStateToProps = (state, ownProps) => {
+  let datas = [...Object.values(state.countReducers)];
 
-export default connect(null, { create_count })(EditCount);
+  // console.log(datas);
+  // datas.map((na) => console.log(na.uuid));
+  // console.log(ownProps.match.params.id);
+  let result = datas.filter(
+    (info) => info.uuid === ownProps.match.params.id
+  )[0];
+
+  console.log(result);
+  return {
+    targetInfo: result,
+  };
+};
+
+export default connect(mapStateToProps, { edit_count, fetch_count })(EditCount);

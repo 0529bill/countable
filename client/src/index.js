@@ -7,6 +7,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import combineReducers from './reducers/combineReducers';
+import 'font-awesome/css/font-awesome.min.css';
 
 //use compose to combine multiple enhancers to the redux store!
 
